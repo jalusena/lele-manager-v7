@@ -1,0 +1,91 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  ponds     Pond[]
+}
+
+model Pond {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      String    // terpal, beton, tanah
+  size      Float?    // luas m2
+  startDate DateTime
+  status    String    @default("active") // active, inactive, harvest
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  seeds     Seed[]
+  feeds     Feed[]
+  harvests  Harvest[]
+  expenses  Expense[]
+}
+
+model Seed {
+  id         String   @id @default(cuid())
+  pondId     String
+  pond       Pond     @relation(fields: [pondId], references: [id], onDelete: Cascade)
+  totalSeed  Int
+  seedWeight Float?
+  seedSize   String?
+  seedOrigin String?
+  seedPrice  Float
+  seedDate   DateTime
+  notes      String?
+  createdAt  DateTime @default(now())
+}
+
+model Feed {
+  id         String   @id @default(cuid())
+  pondId     String
+  pond       Pond     @relation(fields: [pondId], references: [id], onDelete: Cascade)
+  feedName   String
+  feedWeight Float
+  price      Float
+  feedDate   DateTime
+  notes      String?
+  createdAt  DateTime @default(now())
+}
+
+model Harvest {
+  id             String   @id @default(cuid())
+  pondId         String
+  pond           Pond     @relation(fields: [pondId], references: [id], onDelete: Cascade)
+  harvestNumber  Int
+  grossWeight    Float
+  refraction     Float    @default(5)
+  netWeight      Float
+  pricePerKg     Float    @default(18300)
+  totalPrice     Float
+  buyer          String?
+  harvestDate    DateTime
+  notes          String?
+  createdAt      DateTime @default(now())
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  pondId      String
+  pond        Pond     @relation(fields: [pondId], references: [id], onDelete: Cascade)
+  category    String   // listrik, obat, vitamin, perawatan, transportasi, lain-lain
+  expenseName String
+  nominal     Float
+  expenseDate DateTime
+  notes       String?
+  createdAt   DateTime @default(now())
+}
