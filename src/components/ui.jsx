@@ -121,17 +121,16 @@ export function Button({ children, variant = 'primary', loading = false, classNa
   )
 }
 
-// ── BottomSheet Modal — FIXED untuk mobile keyboard ───────────
+// ── Center Modal — posisi tengah layar, scroll di dalam ───────
 export function BottomSheet({ open, onClose, title, children }) {
-  const sheetRef = useRef(null)
+  const contentRef = useRef(null)
 
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
-      // Scroll sheet ke atas saat dibuka
       setTimeout(() => {
-        if (sheetRef.current) sheetRef.current.scrollTop = 0
-      }, 50)
+        if (contentRef.current) contentRef.current.scrollTop = 0
+      }, 30)
     } else {
       document.body.style.overflow = ''
     }
@@ -141,17 +140,16 @@ export function BottomSheet({ open, onClose, title, children }) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
-      {/* Sheet — tinggi maksimal 80vh, scroll di dalam */}
+      {/* Modal box — posisi tengah */}
       <div
-        ref={sheetRef}
-        className="relative w-full max-w-lg bg-white rounded-t-3xl slide-up"
-        style={{ maxHeight: '82vh', display: 'flex', flexDirection: 'column' }}
+        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl fade-in"
+        style={{ maxHeight: '88vh', display: 'flex', flexDirection: 'column' }}
       >
-        {/* Header — sticky di atas */}
+        {/* Header sticky */}
         <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-100 shrink-0">
           <h2 className="text-base font-bold text-gray-800">{title}</h2>
           <button
@@ -162,11 +160,13 @@ export function BottomSheet({ open, onClose, title, children }) {
           </button>
         </div>
 
-        {/* Konten — scrollable */}
-        <div className="overflow-y-auto overscroll-contain px-5 py-4 flex-1">
+        {/* Konten scrollable */}
+        <div
+          ref={contentRef}
+          className="overflow-y-auto overscroll-contain px-5 py-4 flex-1"
+        >
           {children}
-          {/* Padding bawah ekstra agar tombol tidak tertutup keyboard */}
-          <div className="h-6" />
+          <div className="h-2" />
         </div>
       </div>
     </div>
