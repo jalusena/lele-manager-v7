@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --teal: #1D9E75;
+  --teal-dark: #085041;
+  --teal-light: #E1F5EE;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Mencegah zoom saat tap input di iOS */
+  touch-action: manipulation;
+}
+
+/* Mencegah zoom input di iOS Safari */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+/* Label tetap kecil */
+label {
+  font-size: 12px !important;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Scrollbar tipis */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+/* Input number: hilangkan arrow */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] { -moz-appearance: textfield; }
+
+/* Animasi fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.18s ease-out; }
+
+/* Bottom sheet slide-up */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.slide-up { animation: slideUp 0.22s cubic-bezier(0.32, 0.72, 0, 1); }
+
+/* Safe area untuk iPhone notch/home indicator */
+.safe-area-pb { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Modal sheet overscroll lock */
+.overscroll-contain { overscroll-behavior: contain; }
